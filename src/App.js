@@ -1,18 +1,32 @@
 import React from 'react'
+import { PropTypes } from 'react'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookShelf from './BookShelf'
 import Search from './Search'
+import *  as BooksAPI from './BooksAPI';
 
 class BooksApp extends React.Component {
+  
   state = {
     showSearchPage: false,
-    curr_books :[1, 3, 5],
-    want_books: [2, 6],
-    read_books: [10, 12],
+    books: [],
+  }
+
+  async getData(){
+    let myBooks = await BooksAPI.getAll()
+
+    this.setState(() => ({
+      books: myBooks
+    }))
+  }
+
+  componentDidMount(){
+    this.getData();
   }
 
   render() {
+    console.log(this.state.books)
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -24,9 +38,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-              <BookShelf title="Currently Reading" books={this.state.curr_books}/>
-              <BookShelf title="Want to Read" books={this.state.want_books}/> 
-              <BookShelf title= "Read" books={this.state.read_books} />
+              <BookShelf title="Currently Reading" books={this.state.books.filter((book) => {return book.shelf === 'currentlyReading'})}/>
+              <BookShelf title="Want to Read" books={this.state.books.filter((book) => {return book.shelf ==='wantToRead'})}/> 
+              <BookShelf title= "Read" books={this.state.books.filter((book) => {return book.shelf ==='read'})}/> 
               </div>
             </div>
             <div className="open-search">

@@ -24,7 +24,7 @@ class Search extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-               { console.log(BooksAPI.get(3) )}
+               { }
               <ol className="books-grid"></ol>
             </div>
           </div>
