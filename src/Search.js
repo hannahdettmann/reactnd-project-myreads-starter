@@ -1,30 +1,68 @@
 import React from 'react';
 import './App.css'
+import { Link } from 'react-router-dom'
 import *  as BooksAPI from './BooksAPI';
+import BookShelf from './BookShelf'
 
 class Search extends React.Component {
     
-  render() {
-    return (
+  state = {
+    query: "",
+    activeBooks: [],
+  }
 
+
+  updateQuery = (query) => {
+    this.setState(() => ({
+      query: query
+    }))
+
+    if(query === ""){
+      this.setState(() => ({
+        activeBooks: []
+      }))
+      return
+    }
+    this.updateSearch(query)
+  }
+
+  async updateSearch(q){
+    let res = await BooksAPI.search(q)
+
+    if (res.error || res===undefined){
+      this.setState(() => ({
+        activeBooks: []
+      }))
+    }
+    else {
+      this.setState(() => ({
+        activeBooks: res
+      }))
+      }
+    }
+
+    
+  
+
+  render() {
+    const { query } = this.state
+    const { onUpdateShelf} = this.props
+    return (
 <div className="search-books">
             <div className="search-books-bar">
-              <button className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</button>
+              <Link to="/">
+              <button className="close-search" >Close</button>
+              </Link>
               <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author"/>
+                <input type="text" 
+                        value={query}
+                        onChange={(event) => this.updateQuery(event.target.value)} 
+                        placeholder="Search by title or author"/>
 
               </div>
             </div>
             <div className="search-books-results">
-               { }
+            <BookShelf title="Search Results" books={this.state.activeBooks} onUpdateShelf={this.onUpdateShelf.bind(this)}/> 
               <ol className="books-grid"></ol>
             </div>
           </div>

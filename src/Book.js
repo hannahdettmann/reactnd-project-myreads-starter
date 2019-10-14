@@ -4,9 +4,14 @@ import *  as BooksAPI from './BooksAPI';
 
 class Book extends Component{  
 
+  state= {
+    shelf: this.props.myBook.shelf,
+  }
+
   async updateBook(id, val){
     let b = await BooksAPI.update(id, val)
-    console.log(b)
+    //console.log(b)
+    this.props.onUpdateShelf(id, val)
   }
 
   handleChange(e) {
@@ -15,13 +20,13 @@ class Book extends Component{
     }
     
     render()  {
-      
+
         return (
         <div className="book">
             <div className="book-top">
               <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${this.props.myBook.imageLinks.thumbnail})` }}></div>
               <div className="book-shelf-changer">
-                <select onChange={this.handleChange.bind(this)} value={this.props.myBook.shelf} >
+                <select onChange={this.handleChange.bind(this)} value={this.props.myBook.shelf||'none'} >
                   <option value="move" disabled>Move to...</option>
                   <option value="currentlyReading">Currently Reading</option>
                   <option value="wantToRead">Want to Read</option>
@@ -31,7 +36,7 @@ class Book extends Component{
               </div>
             </div>
             <div className="book-title">{this.props.myBook.title}</div>
-            <div className="book-authors">{this.props.myBook.authors.map((a) => <p key={a}>{a}</p>)}</div>
+            {this.props.myBook.authors &&<div className="book-authors">{this.props.myBook.authors.map((a) => <p key={a}>{a}</p>)}</div> }          
             </div>
         )
     }
