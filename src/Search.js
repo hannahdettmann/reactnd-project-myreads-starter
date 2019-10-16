@@ -62,7 +62,7 @@ class Search extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-            <BookShelf title="Search Results" books={this.state.activeBooks} onUpdateShelf={this.onUpdateShelf.bind(this)}/> 
+            <BookShelf title="Search Results" books={this.state.activeBooks} onUpdateShelf={this.props.onUpdateShelf.bind(this)}/> 
               <ol className="books-grid"></ol>
             </div>
           </div>

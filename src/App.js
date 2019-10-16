@@ -12,25 +12,24 @@ class BooksApp extends React.Component {
     books: [],
   }
 
-  updateShelf(id, shelf){
-    console.log(id)
-    console.log(shelf)
+  async updateShelf(id, shelf){
     let myBook = this.state.books.filter((book) => {return book.id === id})
     
-    myBook[0].shelf = shelf
+    if(myBook[0] === undefined){
+      myBook = await BooksAPI.get(id)
+    } else{
+      myBook = myBook[0]
+      this.setState((currentState) => ({
+        books: currentState.books.filter((b) => {
+          return b.id !== id
+        })
+      }))
+    }
     
+    myBook.shelf = shelf
+      
     this.setState((currentState) => ({
-      books: currentState.books.filter((b) => {
-        return b.id !== id
-      })
-    }))
-    
-    console.log('removed book')
-    console.log(this.state.books)
-    console.log(myBook)
-    
-    this.setState((currentState) => ({
-      books: currentState.books.concat([myBook[0]])
+      books: currentState.books.concat([myBook])
     }))
   }
 
@@ -47,7 +46,6 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    //console.log(this.state.books)
     return (
       <div className="app">
         <Route exact path='/' render={() => (
